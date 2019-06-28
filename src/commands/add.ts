@@ -1,12 +1,15 @@
-import {ConfigService} from "../config/configService";
 import chalk from 'chalk';
+import { ICommand } from './i-command';
+import { ConfigService } from '../config/configService';
 
-export function add(noteKey: string, filePath: string) {
+export const add: ICommand = {
+  command: 'add <noteKey> <filePath>',
+  action: (noteKey: string, filePath: string) => {
     const configService = ConfigService.fromEnv();
     const config = configService.readConfig();
 
     if (config.secrets.hasOwnProperty(noteKey)) {
-        throw new Error(`Key '${noteKey}' already exists`);
+      throw new Error(`Key '${noteKey}' already exists`);
     }
 
     // TODO: Validate the note actually exists on lastpass
@@ -14,5 +17,6 @@ export function add(noteKey: string, filePath: string) {
 
     configService.writeConfig(config);
 
-    console.log(chalk.green(`Successfully added the '${noteKey}' note to you syncrets`));
-}
+    console.log(chalk.green(`Successfully added the '${noteKey}' note to your syncrets`));
+  },
+};

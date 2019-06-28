@@ -1,9 +1,12 @@
-import {ConfigService} from "../config/configService";
-import lastpass, {IEntryData} from '@absolunet/lastpass-sdk';
 import chalk from 'chalk';
 import fs from 'fs';
+import { ConfigService } from '../config/configService';
+import { LastpassHelper } from '../lastpass-helper';
+import { ICommand } from './i-command';
 
-export async function sync() {
+export const sync: ICommand = {
+  command: 'sync',
+  action: async () => {
     const configService = ConfigService.fromEnv();
 
     const syncrets = configService.readConfig().secrets;
@@ -11,21 +14,17 @@ export async function sync() {
     console.log(`Processing ${Object.keys(syncrets).length} secure notes`);
 
     for (let key in syncrets) {
-        if (!syncrets.hasOwnProperty(key)) {
-            continue;
-        }
+      if (!syncrets.hasOwnProperty(key)) {
+        continue;
+      }
 
-        const fileOutput = syncrets[key];
+      const fileOutput = syncrets[key];
 
-        console.log(chalk.blue(`Retrieving note '${key}`));
-        const entryData = await getStringFromLastpass(key);
-        console.log(chalk.green(`Found note! Writing to ${fileOutput}`));
-        fs.writeFileSync(fileOutput, entryData.note);
+      console.log(chalk.blue(`Retrieving note '${key}'`));
+      const entryData = await LastpassHelper.getKey(key);
+      console.log(chalk.green(`Found note! Writing to ${fileOutput}`));
+      fs.writeFileSync(fileOutput, entryData.note);
     }
-}
+  },
+};
 
-async function getStringFromLastpass(key: string): Promise<IEntryData> {
-    const secret = await lastpass.show(key);
-
-    return secret.data[0];
-}

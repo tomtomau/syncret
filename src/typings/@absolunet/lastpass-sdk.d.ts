@@ -17,6 +17,7 @@ declare module '@absolunet/lastpass-sdk' {
 
     interface Lastpass {
         show: (key: string) => Promise<IEntry>;
+        rm: (key: string) => Promise<{ success: boolean}>;
     }
 
     export default lastpass;

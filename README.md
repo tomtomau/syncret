@@ -11,3 +11,13 @@ TODO: Install info
 
 Syncret uses the [lpass](https://github.com/lastpass/lastpass-cli) LastPass CLI tool under the hood to communicate with
 LastPass.
+
+## Usage
+
+```bash
+syncret init
+```
+
+This will create a .syncret.json in your home directory, you can then store this dotfile in RCM or your own dotfile system.
+
+
